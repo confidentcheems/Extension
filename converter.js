@@ -139,46 +139,6 @@
     }
   }
 
-  function nonFlexStyle(element) {
-    const pairs = [];
-    for (const prop of Array.from(element.style)) {
-      if (prop === "display" || prop.startsWith("flex") || prop === "justify-content" || prop === "align-items" || prop === "align-content" || prop === "align-self" || prop === "gap" || prop === "row-gap" || prop === "column-gap") continue;
-      pairs.push(`${prop}:${element.style.getPropertyValue(prop)}${element.style.getPropertyPriority(prop) ? " !important" : ""}`);
-    }
-    return pairs.join(";");
-  }
-
-  // Convert only simple horizontal flex rows (cards, image pairs, icon + text) to stable native tables.
-  function materializeSimpleFlexRows(root, report) {
-    const candidates = Array.from(root.querySelectorAll("*")).filter((element) => /^(inline-)?flex$/i.test(element.style.display || ""));
-    for (const element of candidates) {
-      const direction = (element.style.flexDirection || "row").toLowerCase();
-      const children = Array.from(element.children).filter((child) => child.namespaceURI !== SVG_NS);
-      if (direction.includes("column") || children.length < 2 || children.length > 4) continue;
-      const table = element.ownerDocument.createElement("table");
-      const tbody = element.ownerDocument.createElement("tbody");
-      const row = element.ownerDocument.createElement("tr");
-      const gap = Number.parseFloat(element.style.columnGap || element.style.gap || "0") || 0;
-      table.setAttribute("style", `${nonFlexStyle(element)};width:100%;table-layout:fixed;border-collapse:collapse;border-spacing:0`);
-      for (const child of children) {
-        const cell = element.ownerDocument.createElement("td");
-        const sidePadding = gap ? `${Math.max(0, gap / 2)}px` : "0";
-        cell.setAttribute("style", `width:${(100 / children.length).toFixed(4)}%;vertical-align:${element.style.alignItems === "center" ? "middle" : "top"};padding-left:${sidePadding};padding-right:${sidePadding}`);
-        child.style.removeProperty("flex");
-        child.style.removeProperty("flex-grow");
-        child.style.removeProperty("flex-shrink");
-        child.style.removeProperty("flex-basis");
-        child.style.setProperty("width", "100%");
-        cell.appendChild(child);
-        row.appendChild(cell);
-      }
-      tbody.appendChild(row);
-      table.appendChild(tbody);
-      element.replaceWith(table);
-      report.materializedFlexRows++;
-    }
-  }
-
   function hasOwnStyle(element, property) {
     return Boolean(element.style.getPropertyValue(property).trim());
   }
@@ -491,7 +451,7 @@
       namespacedSvgIds: 0, degradedLayouts: 0, degradedAnimations: 0, droppedCssRules: 0,
       droppedProperties: new Set(), warnings: [], officialComponentKinds: new Set(), unsupportedDynamic: new Set(),
       gifImages: 0, apngImages: 0, miniProgramLinks: 0, scrollContainers: 0, cssKeyframes: 0,
-      roundedTypography: false, iconFrames: 0, materializedPseudoElements: 0, materializedTextStyles: 0, materializedFlexRows: 0
+      roundedTypography: false, iconFrames: 0, materializedPseudoElements: 0, materializedTextStyles: 0
     };
     const documentSource = new DOMParser().parseFromString(source, "text/html");
     const root = documentSource.body;
@@ -508,7 +468,6 @@
     applyCssRules(root, rules, report);
     materializePseudoElements(root, rules, report);
     materializeTextStyles(root, report);
-    materializeSimpleFlexRows(root, report);
     // 只在原稿没有明确设计时补足视觉细节，避免覆盖作者的字体和图标外观。
     enhanceTypography(root, report);
     enhanceIconFrames(root, report);
@@ -549,7 +508,6 @@
     if (report.droppedProperties.size) summary.push(`忽略 ${Array.from(report.droppedProperties).slice(0, 8).join("、")} 等不兼容样式`);
     if (report.materializedPseudoElements) summary.push(`已将 ${report.materializedPseudoElements} 个伪元素装饰转为真实节点`);
     if (report.materializedTextStyles) summary.push(`已固化 ${report.materializedTextStyles} 条继承文字样式（含颜色）`);
-    if (report.materializedFlexRows) summary.push(`已将 ${report.materializedFlexRows} 个横向 flex 组件转为公众号稳定表格结构`);
     if (report.warnings.length) summary.push(...Array.from(new Set(report.warnings)).slice(0, 3));
     const metadata = extractMetadata(source);
     if (metadata.title) summary.unshift(`识别标题：${metadata.title}`);
