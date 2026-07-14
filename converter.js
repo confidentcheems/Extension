@@ -125,7 +125,7 @@
 
   // WeChat reapplies defaults to several text tags. Persist inherited colors and type styles on each text node.
   function materializeTextStyles(root, report) {
-    const textNodes = root.querySelectorAll("p,span,strong,b,em,i,u,s,del,a,h1,h2,h3,h4,h5,h6,li,blockquote,td,th,pre,code");
+    const textNodes = root.querySelectorAll("p,span,strong,b,em,i,u,s,del,a,h1,h2,h3,h4,h5,h6,li,blockquote,td,th,pre,code,div,section,article,header,main,footer");
     const inheritedProperties = ["color", "font-family", "font-size", "font-weight", "font-style", "line-height", "letter-spacing", "text-align", "text-decoration"];
     for (const element of textNodes) {
       if (!(element.textContent || "").trim()) continue;
