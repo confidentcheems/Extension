@@ -1,0 +1,27 @@
+:root { color-scheme: light; }
+* { box-sizing: border-box; }
+body { width: 390px; margin: 0; background: #f6f8fb; color: #1f2937; font: 14px/1.55 -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; }
+main { padding: 16px; }
+header h1 { margin: 0; color: #102a43; font-size: 19px; }
+header p { margin: 4px 0 14px; color: #627d98; font-size: 12px; }
+.file-label { display: block; padding: 9px 10px; border: 1px dashed #7fb3d5; border-radius: 8px; background: #fff; color: #176b87; cursor: pointer; text-align: center; }
+.file-label input { display: none; }
+.or { margin: 9px 0; color: #829ab1; font-size: 12px; text-align: center; }
+textarea { width: 100%; min-height: 172px; resize: vertical; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; background: #fff; color: #1f2937; font: 12px/1.45 ui-monospace, SFMono-Regular, Consolas, monospace; }
+.metadata { margin: 12px 0; padding: 10px; border: 1px solid #d9e2ec; border-radius: 8px; background: #fff; }
+.metadata-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 8px; color: #243b53; font-size: 12px; }
+.metadata-heading span { color: #829ab1; font-size: 11px; text-align: right; }
+.metadata label { display: block; margin-top: 7px; color: #486581; font-size: 12px; }
+.metadata input { display: block; width: 100%; margin-top: 3px; padding: 7px 8px; border: 1px solid #cbd5e1; border-radius: 6px; color: #1f2937; font: 13px/1.4 -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; }
+.actions { display: flex; gap: 8px; }
+button { border: 0; border-radius: 8px; padding: 9px 10px; cursor: pointer; font: inherit; font-weight: 600; }
+.primary { flex: 1.3; background: #147d89; color: #fff; }
+.secondary { flex: 1; background: #e5eef5; color: #243b53; }
+.text-button { width: 100%; margin-top: 8px; padding: 6px; background: transparent; color: #176b87; font-weight: 500; }
+.status { min-height: 42px; margin: 12px 0 8px; padding: 9px 10px; border-radius: 8px; background: #eaf4fb; color: #334e68; font-size: 12px; }
+.status.error { background: #fff1f0; color: #a61b1b; }
+.status.success { background: #e6f6ee; color: #1f6a47; }
+details { border-top: 1px solid #d9e2ec; padding-top: 8px; color: #486581; font-size: 12px; }
+summary { cursor: pointer; }
+pre { max-height: 125px; overflow: auto; white-space: pre-wrap; color: #334e68; font: 11px/1.45 ui-monospace, SFMono-Regular, Consolas, monospace; }
+.notice { margin: 12px 0 0; color: #829ab1; font-size: 11px; }

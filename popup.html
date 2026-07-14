@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>公众号 HTML 智能直通</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <main>
+    <header>
+      <h1>公众号 HTML 智能直通</h1>
+      <p>正文保留为可编辑文本；已有 SVG 组件、图层与动画会与内联样式一同写入公众号正文。</p>
+    </header>
+
+    <label class="file-label">选择 HTML 文件
+      <input id="fileInput" type="file" accept=".html,.htm,text/html">
+    </label>
+    <div class="or">或粘贴 HTML</div>
+    <textarea id="source" spellcheck="false" placeholder="粘贴完整 HTML，或选择本地文件…"></textarea>
+
+    <section class="metadata" aria-label="识别到的文章信息">
+      <div class="metadata-heading">
+        <strong>自动识别的文章信息</strong>
+        <span id="metadataHint">等待读取 HTML</span>
+      </div>
+      <label>标题
+        <input id="articleTitle" type="text" maxlength="120" placeholder="将从标题、H1 或 meta 标签识别">
+      </label>
+      <label>作者
+        <input id="articleAuthor" type="text" maxlength="80" placeholder="将从作者 meta 或作者区域识别">
+      </label>
+    </section>
+
+    <div class="actions">
+      <button id="convert" class="secondary">检查转换结果</button>
+      <button id="insert" class="primary">导入到当前图文</button>
+    </div>
+    <button id="copy" class="text-button">复制直通 HTML</button>
+
+    <section id="status" class="status" aria-live="polite">请先选择或粘贴 HTML。</section>
+    <details>
+      <summary>转换报告</summary>
+      <pre id="report">尚未转换</pre>
+    </details>
+    <p class="notice">导入会分别写入标题、作者和正文，不会自动保存、发布或群发。</p>
+  </main>
+  <script src="converter.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

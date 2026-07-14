@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="zh-CN">
+<body>
+  <section style="margin:16px auto;max-width:677px;text-align:center;line-height:0;">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 360" style="display:block;width:100%;overflow:hidden;" role="img" aria-label="点击切换的 SVG 滑动示例">
+      <defs>
+        <clipPath id="window"><rect x="0" y="0" width="750" height="360" rx="22" /></clipPath>
+        <linearGradient id="sky" x1="0" x2="1"><stop offset="0" stop-color="#1c92d2" /><stop offset="1" stop-color="#f2fcfe" /></linearGradient>
+      </defs>
+      <g clip-path="url(#window)">
+        <g id="slides">
+          <animateTransform attributeName="transform" type="translate" values="0 0;-750 0;0 0" begin="click" dur="1.4s" repeatCount="indefinite" />
+          <g transform="translate(0 0)">
+            <rect width="750" height="360" fill="url(#sky)" />
+            <text x="375" y="165" text-anchor="middle" fill="#083344" font-size="42" font-family="PingFang SC, Microsoft YaHei">点击画面，SVG 开始滑动</text>
+            <text x="375" y="225" text-anchor="middle" fill="#155e75" font-size="24">第 1 张 · 公众号 SVG 直通测试</text>
+          </g>
+          <g transform="translate(750 0)">
+            <rect width="750" height="360" fill="#172554" />
+            <text x="375" y="165" text-anchor="middle" fill="#e0f2fe" font-size="42" font-family="PingFang SC, Microsoft YaHei">图层与动画仍然存在</text>
+            <text x="375" y="225" text-anchor="middle" fill="#7dd3fc" font-size="24">第 2 张 · animateTransform</text>
+          </g>
+        </g>
+      </g>
+    </svg>
+  </section>
+</body>
+</html>
