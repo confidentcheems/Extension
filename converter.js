@@ -18,7 +18,7 @@
     "font", "font-family", "font-size", "font-weight", "font-style", "font-variant", "line-height", "letter-spacing", "text-align", "text-indent", "text-decoration", "text-decoration-color", "text-decoration-style",
     "white-space", "word-break", "overflow-wrap", "vertical-align", "opacity", "box-sizing", "display", "float", "clear", "overflow", "overflow-x", "overflow-y", "position", "top", "right", "bottom", "left", "z-index", "isolation",
     "width", "min-width", "max-width", "height", "min-height", "max-height", "margin", "margin-top", "margin-right", "margin-bottom", "margin-left", "padding", "padding-top", "padding-right", "padding-bottom", "padding-left",
-    "border", "border-top", "border-right", "border-bottom", "border-left", "border-color", "border-style", "border-width", "border-radius", "box-shadow", "text-shadow", "object-fit", "object-position", "aspect-ratio", "background-clip", "background-origin",
+    "border", "border-top", "border-right", "border-bottom", "border-left", "border-color", "border-style", "border-width", "border-radius", "-webkit-border-radius", "box-shadow", "text-shadow", "object-fit", "object-position", "aspect-ratio", "background-clip", "background-origin",
     "list-style", "list-style-type", "table-layout", "border-collapse", "border-spacing", "caption-side", "flex", "flex-direction", "flex-wrap", "flex-grow", "flex-shrink", "flex-basis", "justify-content", "align-items", "align-content", "align-self", "gap", "row-gap", "column-gap", "grid-template-columns", "grid-template-rows", "grid-column", "grid-row",
     "transform", "transform-origin", "transform-box", "fill", "fill-opacity", "fill-rule", "stroke", "stroke-width", "stroke-opacity", "stroke-linecap", "stroke-linejoin", "stroke-dasharray", "stroke-dashoffset", "stop-color", "stop-opacity", "clip-path", "mask", "filter", "pointer-events"
   ]);
@@ -199,6 +199,29 @@
         element.style.setProperty("box-shadow", "0 3px 8px rgba(32,85,137,.10)");
       }
       report.iconFrames++;
+    }
+  }
+
+  // Some WeChat editor themes reset border-radius on small inline blocks. Reassert
+  // round badges after icon enhancement so numbered circles/dots do not become squares.
+  function stabilizeRoundShapes(root, report) {
+    for (const element of Array.from(root.querySelectorAll("*"))) {
+      const marker = classNameOf(element);
+      const width = Number.parseFloat(element.style.width || element.style.minWidth || "");
+      const height = Number.parseFloat(element.style.height || "");
+      const explicitlyNamed = /(?:visit-icon|chapter-no|ending-mark|fact-dot|badge|avatar|round|circle|dot)/i.test(marker);
+      const smallSquare = Number.isFinite(width) && Number.isFinite(height) && width > 0 && height > 0 && width <= 64 && height <= 64 && Math.abs(width - height) <= 4;
+      if (!explicitlyNamed && !smallSquare) continue;
+      if (!element.style.borderRadius && !explicitlyNamed) continue;
+      element.style.setProperty("border-radius", "50%", "important");
+      element.style.setProperty("-webkit-border-radius", "50%", "important");
+      element.style.setProperty("overflow", "hidden", "important");
+      if (/\bvisit-icon\b/i.test(marker)) {
+        element.style.setProperty("background", "transparent", "important");
+        element.style.setProperty("border", "1px solid rgba(255,255,255,.7)", "important");
+        element.style.setProperty("color", "#fff4c8", "important");
+      }
+      report.roundedShapes++;
     }
   }
 
@@ -451,7 +474,7 @@
       namespacedSvgIds: 0, degradedLayouts: 0, degradedAnimations: 0, droppedCssRules: 0,
       droppedProperties: new Set(), warnings: [], officialComponentKinds: new Set(), unsupportedDynamic: new Set(),
       gifImages: 0, apngImages: 0, miniProgramLinks: 0, scrollContainers: 0, cssKeyframes: 0,
-      roundedTypography: false, iconFrames: 0, materializedPseudoElements: 0, materializedTextStyles: 0
+      roundedTypography: false, iconFrames: 0, roundedShapes: 0, materializedPseudoElements: 0, materializedTextStyles: 0
     };
     const documentSource = new DOMParser().parseFromString(source, "text/html");
     const root = documentSource.body;
@@ -471,6 +494,7 @@
     // 只在原稿没有明确设计时补足视觉细节，避免覆盖作者的字体和图标外观。
     enhanceTypography(root, report);
     enhanceIconFrames(root, report);
+    stabilizeRoundShapes(root, report);
     report.scrollContainers = Array.from(root.querySelectorAll("*")).filter((node) => /auto|scroll/i.test(node.style.overflow || "") || /auto|scroll/i.test(node.style.overflowX || "")).length;
     report.svgComponents = root.querySelectorAll("svg").length;
     report.svgAnimations = root.querySelectorAll("animate, set, animateTransform, animateMotion").length;

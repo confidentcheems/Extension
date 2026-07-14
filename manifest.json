@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "公众号 HTML 智能直通",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "自动识别标题作者；保留 SVG、GIF、小程序链接及公众号原生媒体组件代码并写入正文。",
   "permissions": ["activeTab", "tabs", "storage", "scripting"],
   "host_permissions": ["https://mp.weixin.qq.com/*"],
